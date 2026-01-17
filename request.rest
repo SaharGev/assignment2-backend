@@ -1,0 +1,68 @@
+//request.rest
+
+//POSTS
+###
+
+GET http://localhost:3000/post
+
+###
+GET http://localhost:3000/post/696b962900d9f5276526f49c
+
+###
+POST http://localhost:3000/post
+Content-Type: application/json
+
+{
+  "title": "New Post Title",
+  "content": "This is the content of the new post.",
+  "sender": 333333333
+}
+
+###
+GET http://localhost:3000/post?sender=333333333
+
+###
+PUT http://localhost:3000/post/696b965500d9f5276526f4a4
+Content-Type: application/json
+
+{
+  "title": "Updated Post Title",
+  "content": "This is the updated content of the post.",
+  "sender": 333
+}
+
+###
+GET http://localhost:3000/post/696b965500d9f5276526f4a4/comments
+
+//COMMENTS 
+
+###
+GET http://localhost:3000/comments
+
+###
+GET http://localhost:3000/comments?postId=69500388b6ed5272b29c4732
+
+###
+GET http://localhost:3000/comments/695004b9b6ed5272b29c4748
+
+###
+POST http://localhost:3000/comments
+Content-Type: application/json
+
+{
+  "postId": "69500387b6ed5272b29c4730",
+  "content": "This is a comment 1 on the post.",
+  "sender": 222
+}
+
+###
+DELETE http://localhost:3000/comments/69500546b6ed5272b29c475e
+
+###
+PUT http://localhost:3000/comments/695004e8b6ed5272b29c474f
+Content-Type: application/json
+
+{
+  "content": "This is the updated comment content."
+}
+

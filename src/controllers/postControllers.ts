@@ -1,0 +1,77 @@
+//controllers/postControllers.ts
+import { Request, Response } from 'express';
+import postModel from "../model/postModel";
+import commentModel from '../model/commentModel';
+
+
+const getAllPosts = async (req: Request, res:Response) => {
+    try {
+        const sender = req.query.sender as string | undefined;
+        if (sender) {
+            const posts = await postModel.find({ sender: sender });
+            return res.json(posts);
+        }else {
+            const posts = await postModel.find();
+            res.json(posts);
+        }
+    } catch (err: any) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+const getPostById = async (req: Request, res: Response) => {
+    const id = req.params.id;
+    try {
+        const post = await postModel.findById(id);  
+        if (!post) {
+            return res.status(404).send('post not found');
+        }
+        res.json(post);
+    } catch (err: any) {
+        console.error(err);
+        res.status(500).send('error getting post by id');
+    }  
+}; 
+
+const createNewPost = async (req: Request, res: Response) => {
+    const post = req.body;
+    console.log(post);
+    try {
+        const newPost = await postModel.create(post);
+        res.status(201).json(newPost);
+    } catch (err: any) {
+        res.status(500).send('Error creating post');
+    }
+};
+
+const updatePost = async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const updatedData = req.body;   
+    try {
+        const updatedPost = await postModel.findByIdAndUpdate(id, updatedData, { new: true });
+        if (!updatedPost) {
+            return res.status(404).send('Post not found');
+        }   
+        res.json(updatedPost);
+    } catch (err: any) {
+        res.status(500).send('Error updating post');
+    }
+};
+
+const getCommentsByPostId = async (req: Request, res: Response) => {
+    const postId = req.params.postId;
+    try {
+        const comments = await commentModel.find({ postId: postId });
+        res.status(200).json(comments);
+    } catch (err: any) {
+        res.status(500).json({ message: err.message });
+    }   
+};
+
+export default {
+    getAllPosts,
+    getPostById,
+    createNewPost,
+    updatePost,
+    getCommentsByPostId
+};
