@@ -1,4 +1,4 @@
-//routes/commentRoute.ts
+//routes/commentsRoute.ts
 import { Router } from 'express';
 import commentController from '../controllers/commentController';
 const router = Router();
