@@ -9,6 +9,7 @@
     "test": "tsc && jest --runInBand --detectOpenHandles --forceExit",
     "testComment": "tsc && jest --runInBand --detectOpenHandles --forceExit ./src/tests/comments.test.ts",
     "testPosts": "tsc && jest --runInBand --detectOpenHandles --forceExit ./src/tests/posts.test.ts",
+    "testUsers": "tsc && jest --runInBand --detectOpenHandles --forceExit ./src/tests/users.test.ts",
     "testAuth": "tsc && jest --runInBand --detectOpenHandles --forceExit ./src/tests/auth.test.ts"
   },
   "author": "Sahar & Hadas",

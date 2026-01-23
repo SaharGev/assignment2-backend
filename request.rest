@@ -69,3 +69,39 @@ Content-Type: application/json
   "content": "This is the updated comment content."
 }
 
+//USERS
+
+###
+GET http://localhost:3000/users
+
+###
+GET http://localhost:3000/users/69738857cc157ada9919ab38
+
+###
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "username": "newuser4",
+  "email": "newuser4@example.com",
+  "password": "newuser4password"
+}
+
+###
+GET http://localhost:3000/users?username=newuser
+
+###
+GET http://localhost:3000/users?email=newuser2@example.com
+
+###
+PUT http://localhost:3000/users/64f2c8f4c9ea4b6f8b5d6e1a
+Content-Type: application/json
+
+{
+  "username": "updateduser",
+  "email": "updateduser@example.com",
+  "password": "updateduserpassword"
+} 
+
+###
+DELETE http://localhost:3000/users/697388cccc157ada9919ab48
