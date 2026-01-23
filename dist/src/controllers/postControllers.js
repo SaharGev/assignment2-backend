@@ -79,11 +79,25 @@ const getCommentsByPostId = (req, res) => __awaiter(void 0, void 0, void 0, func
         res.status(500).json({ message: err.message });
     }
 });
+const deletePost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    try {
+        const deletedPost = yield postModel_1.default.findByIdAndDelete(id);
+        if (!deletedPost) {
+            return res.status(404).send('Post not found');
+        }
+        res.json(deletedPost);
+    }
+    catch (err) {
+        res.status(500).send('Error deleting post');
+    }
+});
 exports.default = {
     getAllPosts,
     getPostById,
     createNewPost,
     updatePost,
-    getCommentsByPostId
+    getCommentsByPostId,
+    deletePost
 };
 //# sourceMappingURL=postControllers.js.map

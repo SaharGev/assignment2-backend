@@ -68,10 +68,24 @@ const getCommentsByPostId = async (req: Request, res: Response) => {
     }   
 };
 
+const deletePost = async (req: Request, res: Response) => {
+    const id = req.params.id;
+    try {
+        const deletedPost = await postModel.findByIdAndDelete(id);
+        if (!deletedPost) {
+            return res.status(404).send('Post not found');
+        }
+        res.json(deletedPost);
+    } catch (err: any) {
+        res.status(500).send('Error deleting post');
+    }
+};
+
 export default {
     getAllPosts,
     getPostById,
     createNewPost,
     updatePost,
-    getCommentsByPostId
+    getCommentsByPostId,
+    deletePost
 };
