@@ -51,7 +51,8 @@ const deleteComment = async (req: Request, res: Response) => {
     try {
         const deleted = await commentModel.findByIdAndDelete(id);
         if (!deleted) return res.status(404).send('Comment not found');
-        res.send('Comment deleted');
+        // res.send('Comment deleted');
+        res.status(200).json(deleted);
     } catch (err: any) {
         res.status(500).send('Error deleting comment');
     }
