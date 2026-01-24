@@ -1,5 +1,6 @@
 //controllers/userController.ts
 import { Request, Response } from 'express';
+import bcrypt from 'bcrypt';
 import userModel from '../model/userModel';
 
 const getAllUsers = async (req: Request, res: Response) => {
@@ -34,29 +35,47 @@ const getUserById = async (req: Request, res: Response) => {
     }
 };
 
-/*
 const createUser = async (req: Request, res: Response) => {
-    const user = req.body;
-    try {
-        const newUser = await userModel.create(user);
-        res.status(201).json(newUser);
+  try {
+    const { username, email, password } = req.body;
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: "Username, email and password are required" });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const newUser = await userModel.create({
+      username,
+      email,
+      password: hashedPassword,
+      refreshTokens: [],
+    });
+
+    return res.status(201).json(newUser);
     } catch (err: any) {
-        res.status(500).json({ message: err.message });
+        return res.status(500).json({ message: err.message });
     }
 };
-*/ 
 
 const updateUser = async (req: Request, res: Response) => {
-    const id = req.params.id;
-    const updatedData = req.body;
-    try {
-        const updatedUser = await userModel.findByIdAndUpdate(id, updatedData, { new: true });
-        if (!updatedUser) {
-            return res.status(404).send('User not found');
-        }
-        res.json(updatedUser);
+  const id = req.params.id;
+  const updatedData = { ...req.body };
+
+  try {
+    if (updatedData.password) {
+      const salt = await bcrypt.genSalt(10);
+      updatedData.password = await bcrypt.hash(updatedData.password, salt);
+    }
+
+    const updatedUser = await userModel.findByIdAndUpdate(id, updatedData, { new: true });
+    if (!updatedUser) {
+      return res.status(404).send("User not found");
+    }
+
+    res.json(updatedUser);
     } catch (err: any) {
-        res.status(500).send('Error updating user');
+        res.status(500).send("Error updating user");
     }
 };
 
@@ -76,7 +95,7 @@ const deleteUser = async (req: Request, res: Response) => {
 export default {
   getAllUsers,
   getUserById,
-  //createUser,
+  createUser,
   updateUser,
   deleteUser,
 };

@@ -25,7 +25,7 @@ describe("Users Test Suite", () => {
         expect(response.body.length).toBe(1); // because getLogedInUser creates one user
     });
 
-    /*
+    
     test("Create users", async () => {
         for (const newUser of usersList) {
             const response = await request(app)
@@ -36,19 +36,6 @@ describe("Users Test Suite", () => {
             expect(response.body.username).toBe(newUser.username);
             expect(response.body.email).toBe(newUser.email);
         }
-    });
-    */
-    test("Register users", async () => {
-    for (const newUser of usersList) {
-        const response = await request(app)
-        .post("/auth/register")
-        .send(newUser);
-
-        expect(response.status).toBe(201);
-        expect(response.body).toHaveProperty("_id");
-        expect(response.body).toHaveProperty("token");
-        expect(response.body).toHaveProperty("refreshToken");
-    }
     });
 
     test("Get All Users", async () => {
@@ -84,14 +71,20 @@ describe("Users Test Suite", () => {
     test("Update User", async () => {
         usersList[0].username = "updatedUser1";
         usersList[0].email = "updatedUser1@test.com";
+
+        const newPassword = "newPass123";
+
         const response = await request(app)
             .put("/users/" + userId)
             .set("Authorization", "Bearer " + user.token)
-            .send(usersList[0]);
+            .send({ ...usersList[0], password: newPassword });
+
         expect(response.status).toBe(200);
         expect(response.body._id).toBe(userId);
         expect(response.body.username).toBe(usersList[0].username);
         expect(response.body.email).toBe(usersList[0].email);
+
+        expect(response.body.password).not.toBe(newPassword);
     });
 
     test("Delete User", async () => {

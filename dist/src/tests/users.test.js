@@ -33,28 +33,15 @@ describe("Users Test Suite", () => {
         expect(response.status).toBe(200);
         expect(response.body.length).toBe(1); // because getLogedInUser creates one user
     }));
-    /*
-    test("Create users", async () => {
-        for (const newUser of usersList) {
-            const response = await request(app)
+    test("Create users", () => __awaiter(void 0, void 0, void 0, function* () {
+        for (const newUser of utils_1.usersList) {
+            const response = yield (0, supertest_1.default)(app)
                 .post("/users")
                 .set("Authorization", "Bearer " + user.token)
                 .send(newUser);
             expect(response.status).toBe(201);
             expect(response.body.username).toBe(newUser.username);
             expect(response.body.email).toBe(newUser.email);
-        }
-    });
-    */
-    test("Register users", () => __awaiter(void 0, void 0, void 0, function* () {
-        for (const newUser of utils_1.usersList) {
-            const response = yield (0, supertest_1.default)(app)
-                .post("/auth/register")
-                .send(newUser);
-            expect(response.status).toBe(201);
-            expect(response.body).toHaveProperty("_id");
-            expect(response.body).toHaveProperty("token");
-            expect(response.body).toHaveProperty("refreshToken");
         }
     }));
     test("Get All Users", () => __awaiter(void 0, void 0, void 0, function* () {
@@ -86,14 +73,16 @@ describe("Users Test Suite", () => {
     test("Update User", () => __awaiter(void 0, void 0, void 0, function* () {
         utils_1.usersList[0].username = "updatedUser1";
         utils_1.usersList[0].email = "updatedUser1@test.com";
+        const newPassword = "newPass123";
         const response = yield (0, supertest_1.default)(app)
             .put("/users/" + userId)
             .set("Authorization", "Bearer " + user.token)
-            .send(utils_1.usersList[0]);
+            .send(Object.assign(Object.assign({}, utils_1.usersList[0]), { password: newPassword }));
         expect(response.status).toBe(200);
         expect(response.body._id).toBe(userId);
         expect(response.body.username).toBe(utils_1.usersList[0].username);
         expect(response.body.email).toBe(utils_1.usersList[0].email);
+        expect(response.body.password).not.toBe(newPassword);
     }));
     test("Delete User", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = (yield (0, supertest_1.default)(app).delete("/users/" + userId).set("Authorization", "Bearer " + user.token));

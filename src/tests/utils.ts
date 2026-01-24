@@ -10,20 +10,12 @@ export type UserData = {
   refreshToken: string;
 };
 
-/*
-export const usersList: UserData[] = [
-  { username: "authUser1", email: "test@test.com", password: "testpass", _id: "", token: "", refreshToken: "" },
-  { username: "user1", email: "user1@test.com", password: "123456", _id: "", token: "", refreshToken: "" },
-  { username: "user2", email: "user2@test.com", password: "123456", _id: "", token: "", refreshToken: "" },
-  { username: "user3", email: "user3@test.com", password: "123456", _id: "", token: "", refreshToken: "" },
-];
-*/
-
 export type RegisterData = {
   username: string;
   email: string;
   password: string;
 };
+
 
 export const usersList: RegisterData[] = [
   { username: "user1", email: "user1@test.com", password: "123456" },
@@ -32,9 +24,6 @@ export const usersList: RegisterData[] = [
 ];
 
 export const getLogedInUser = async (app: Express): Promise<UserData> => {
-    //const username = usersList[0].username;
-    //const email = usersList[0].email;
-    //const password = usersList[0].password;
     const authUser = { username: "authUser1", email: "test@test.com", password: "testpass" };
     const username = authUser.username;
     const email = authUser.email;

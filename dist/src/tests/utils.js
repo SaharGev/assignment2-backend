@@ -20,9 +20,6 @@ exports.usersList = [
     { username: "user3", email: "user3@test.com", password: "123456" },
 ];
 const getLogedInUser = (app) => __awaiter(void 0, void 0, void 0, function* () {
-    //const username = usersList[0].username;
-    //const email = usersList[0].email;
-    //const password = usersList[0].password;
     const authUser = { username: "authUser1", email: "test@test.com", password: "testpass" };
     const username = authUser.username;
     const email = authUser.email;

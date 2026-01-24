@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const userModel_1 = __importDefault(require("../model/userModel"));
 const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -47,29 +48,42 @@ const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(500).send('Error retrieving user');
     }
 });
-/*
-const createUser = async (req: Request, res: Response) => {
-    const user = req.body;
+const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const newUser = await userModel.create(user);
-        res.status(201).json(newUser);
-    } catch (err: any) {
-        res.status(500).json({ message: err.message });
+        const { username, email, password } = req.body;
+        if (!username || !email || !password) {
+            return res.status(400).json({ message: "Username, email and password are required" });
+        }
+        const salt = yield bcrypt_1.default.genSalt(10);
+        const hashedPassword = yield bcrypt_1.default.hash(password, salt);
+        const newUser = yield userModel_1.default.create({
+            username,
+            email,
+            password: hashedPassword,
+            refreshTokens: [],
+        });
+        return res.status(201).json(newUser);
     }
-};
-*/
+    catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+});
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
-    const updatedData = req.body;
+    const updatedData = Object.assign({}, req.body);
     try {
+        if (updatedData.password) {
+            const salt = yield bcrypt_1.default.genSalt(10);
+            updatedData.password = yield bcrypt_1.default.hash(updatedData.password, salt);
+        }
         const updatedUser = yield userModel_1.default.findByIdAndUpdate(id, updatedData, { new: true });
         if (!updatedUser) {
-            return res.status(404).send('User not found');
+            return res.status(404).send("User not found");
         }
         res.json(updatedUser);
     }
     catch (err) {
-        res.status(500).send('Error updating user');
+        res.status(500).send("Error updating user");
     }
 });
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -88,7 +102,7 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.default = {
     getAllUsers,
     getUserById,
-    //createUser,
+    createUser,
     updateUser,
     deleteUser,
 };

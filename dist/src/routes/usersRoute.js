@@ -8,7 +8,7 @@ const express_1 = __importDefault(require("express"));
 const userController_1 = __importDefault(require("../controllers/userController"));
 const authMiddleware_1 = require("../middleware/authMiddleware");
 const router = express_1.default.Router();
-//router.post('/', userController.createUser);
+router.post('/', authMiddleware_1.authenticate, userController_1.default.createUser);
 router.get('/', authMiddleware_1.authenticate, userController_1.default.getAllUsers);
 router.get('/:id', authMiddleware_1.authenticate, userController_1.default.getUserById);
 router.put('/:id', authMiddleware_1.authenticate, userController_1.default.updateUser);

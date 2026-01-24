@@ -98,9 +98,30 @@ const refreshToken = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         return sendError(401, "Internal server error", res);
     }
 });
+const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const refreshToken = req.body.refreshToken;
+    if (!refreshToken) {
+        return sendError(400, "Refresh token is required", res);
+    }
+    const secret = process.env.JWT_SECRET || "default_secret";
+    try {
+        const decoded = jsonwebtoken_1.default.verify(refreshToken, secret);
+        const user = yield userModel_1.default.findById(decoded._id);
+        if (!user) {
+            return sendError(401, "Invalid refresh token", res);
+        }
+        user.refreshTokens = user.refreshTokens.filter((t) => t !== refreshToken);
+        yield user.save();
+        return res.status(200).json({ message: "Logged out successfully" });
+    }
+    catch (err) {
+        return sendError(401, "Internal server error", res);
+    }
+});
 exports.default = {
     register,
     login,
-    refreshToken
+    refreshToken,
+    logout
 };
 //# sourceMappingURL=authController.js.map
