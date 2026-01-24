@@ -47,9 +47,21 @@ const getCommentById = (req, res) => __awaiter(void 0, void 0, void 0, function*
 });
 // Create a new comment
 const createComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const comment = req.body;
+    var _a;
     try {
-        const newComment = yield commentModel_1.default.create(comment);
+        const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a._id;
+        if (!userId) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+        const { postId, content } = req.body;
+        if (!postId || !content) {
+            return res.status(400).json({ message: "postId and content are required" });
+        }
+        const newComment = yield commentModel_1.default.create({
+            postId,
+            content,
+            sender: userId,
+        });
         res.status(201).json(newComment);
     }
     catch (err) {
@@ -73,7 +85,9 @@ const deleteComment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 //Update a comment
 const updateComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
-    const updatedData = req.body;
+    const updatedData = Object.assign({}, req.body);
+    delete updatedData.sender;
+    delete updatedData.postId;
     try {
         const updatedComment = yield commentModel_1.default.findByIdAndUpdate(id, updatedData, { new: true });
         if (!updatedComment) {

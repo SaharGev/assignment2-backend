@@ -40,14 +40,13 @@ const getLogedInUser = (app) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getLogedInUser = getLogedInUser;
 exports.postsList = [
-    { title: "post 1", content: "content 1", sender: 111 },
-    { title: "post 2", content: "content 2", sender: 222 },
-    { title: "post 3", content: "content 3", sender: 111 },
+    { title: "post 1", content: "content 1" },
+    { title: "post 2", content: "content 2" },
+    { title: "post 3", content: "content 3" },
 ];
 exports.commentsList = [
-    { content: "this is my comment", postId: "69500387b6ed5272b29c4730", sender: 22222 },
-    { content: "this is my second comment", postId: "69500387b6ed5272b29c4730", sender: 11111 },
-    { content: "this is my third comment", postId: "69500387b6ed5272b29c4730", sender: 33333 },
-    { content: "this is my fourth comment", postId: "69500387b6ed5272b29c4730", sender: 33333 },
+    { content: "comment 1" },
+    { content: "comment 2" },
+    { content: "comment 3" },
 ];
 //# sourceMappingURL=utils.js.map

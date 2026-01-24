@@ -42,12 +42,16 @@ describe("Users Test Suite", () => {
             expect(response.status).toBe(201);
             expect(response.body.username).toBe(newUser.username);
             expect(response.body.email).toBe(newUser.email);
+            expect(response.body).not.toHaveProperty("password");
+            expect(response.body).not.toHaveProperty("refreshTokens");
         }
     }));
     test("Get All Users", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).get("/users").set("Authorization", "Bearer " + user.token);
         expect(response.status).toBe(200);
         expect(response.body.length).toBe(utils_1.usersList.length + 1); // +1 for the logged in user
+        expect(response.body).not.toHaveProperty("password");
+        expect(response.body).not.toHaveProperty("refreshTokens");
     }));
     test("Get User by username", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).get("/users?username=" + utils_1.usersList[0].username).set("Authorization", "Bearer " + user.token);
@@ -82,7 +86,11 @@ describe("Users Test Suite", () => {
         expect(response.body._id).toBe(userId);
         expect(response.body.username).toBe(utils_1.usersList[0].username);
         expect(response.body.email).toBe(utils_1.usersList[0].email);
-        expect(response.body.password).not.toBe(newPassword);
+        expect(response.body).not.toHaveProperty("password");
+        expect(response.body).not.toHaveProperty("refreshTokens");
+        const updatedInDb = yield userModel_1.default.findById(userId);
+        expect(updatedInDb).toBeTruthy();
+        expect(updatedInDb.password).not.toBe(newPassword);
     }));
     test("Delete User", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = (yield (0, supertest_1.default)(app).delete("/users/" + userId).set("Authorization", "Bearer " + user.token));

@@ -8,14 +8,14 @@ const getAllUsers = async (req: Request, res: Response) => {
     const username = req.query.username as string | undefined;
     const email = req.query.email as string | undefined;
     if (username) {
-      const users = await userModel.find({ username: username });
+      const users = await userModel.find({ username: username }).select("-password -refreshTokens");
       return res.status(200).json(users);
     } else if (email) {
-      const users = await userModel.find({ email: email });
+      const users = await userModel.find({ email: email }).select("-password -refreshTokens");
       return res.status(200).json(users);   
     } else {
-      const users = await userModel.find();
-      res.status(200).json(users);
+      const users = await userModel.find().select("-password -refreshTokens");
+      return res.status(200).json(users);
     }
     } catch (err: any) {
         res.status(500).json({ message: err.message });
@@ -25,7 +25,7 @@ const getAllUsers = async (req: Request, res: Response) => {
 const getUserById = async (req: Request, res: Response) => {
     const id = req.params.id;
     try {
-        const user = await userModel.findById(id);
+        const user = await userModel.findById(id).select("-password -refreshTokens");
         if (!user) {
             return res.status(404).send('User not found');
         }
@@ -52,7 +52,12 @@ const createUser = async (req: Request, res: Response) => {
       refreshTokens: [],
     });
 
-    return res.status(201).json(newUser);
+    return res.status(201).json({
+      _id: newUser._id,
+      username: newUser.username,
+      email: newUser.email,
+      createdAt: newUser.createdAt,
+    });
     } catch (err: any) {
         return res.status(500).json({ message: err.message });
     }
@@ -61,14 +66,14 @@ const createUser = async (req: Request, res: Response) => {
 const updateUser = async (req: Request, res: Response) => {
   const id = req.params.id;
   const updatedData = { ...req.body };
-
+  delete updatedData.refreshTokens;
   try {
     if (updatedData.password) {
       const salt = await bcrypt.genSalt(10);
       updatedData.password = await bcrypt.hash(updatedData.password, salt);
     }
 
-    const updatedUser = await userModel.findByIdAndUpdate(id, updatedData, { new: true });
+    const updatedUser = await userModel.findByIdAndUpdate(id, updatedData, { new: true }).select("-password -refreshTokens");
     if (!updatedUser) {
       return res.status(404).send("User not found");
     }
@@ -86,7 +91,11 @@ const deleteUser = async (req: Request, res: Response) => {
         if (!deletedUser) {
             return res.status(404).send('User not found');
         }
-        res.status(200).json(deletedUser);
+        res.status(200).json({
+          _id: deletedUser._id,
+          username: deletedUser.username,
+          email: deletedUser.email,
+        });
     } catch (err: any) {
         res.status(500).send('Error deleting user');
     }

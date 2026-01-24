@@ -29,10 +29,14 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
 afterAll((done) => {
     done();
 });
-const commentsList = [
-    { content: "comment 1", sender: 111 },
-    { content: "comment 2", sender: 222 },
+/*
+type CommentData = { content: string };
+
+const commentsList: Omit<CommentData, "postId">[] = [
+  { content: "comment 1" },
+  { content: "comment 2" },
 ];
+*/
 describe("Posts Test Suite", () => {
     test("Initial empty posts", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).get("/post");
@@ -45,7 +49,8 @@ describe("Posts Test Suite", () => {
             expect(response.status).toBe(201);
             expect(response.body.title).toBe(post.title);
             expect(response.body.content).toBe(post.content);
-            expect(response.body.sender).toBe(post.sender);
+            expect(response.body).toHaveProperty("sender");
+            expect(response.body.sender.toString()).toBe(user._id.toString());
         }
     }));
     test("Get All Posts", () => __awaiter(void 0, void 0, void 0, function* () {
@@ -54,7 +59,7 @@ describe("Posts Test Suite", () => {
         expect(response.body.length).toBe(utils_1.postsList.length);
     }));
     test("Get Posts by Sender", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/post?sender=" + utils_1.postsList[0].sender);
+        const response = yield (0, supertest_1.default)(app).get("/post?sender=" + user._id);
         expect(response.status).toBe(200);
         expect(response.body.length).toBeGreaterThanOrEqual(1);
         expect(response.body[0].title).toBe(utils_1.postsList[0].title);
@@ -67,30 +72,35 @@ describe("Posts Test Suite", () => {
         expect(response.body._id).toBe(postId);
         expect(response.body.title).toBe(utils_1.postsList[0].title);
         expect(response.body.content).toBe(utils_1.postsList[0].content);
-        expect(response.body.sender).toBe(utils_1.postsList[0].sender);
+        expect(response.body).toHaveProperty("sender");
+        expect(response.body.sender.toString()).toBe(user._id.toString());
     }));
     test("Update Post", () => __awaiter(void 0, void 0, void 0, function* () {
         utils_1.postsList[0].title = "updated title";
         utils_1.postsList[0].content = "updated content";
-        utils_1.postsList[0].sender = 333;
         const response = yield (yield (0, supertest_1.default)(app).put("/post/" + postId).set("Authorization", "Bearer " + user.token).send(utils_1.postsList[0]));
         expect(response.status).toBe(200);
         expect(response.body._id).toBe(postId);
         expect(response.body.title).toBe(utils_1.postsList[0].title);
         expect(response.body.content).toBe(utils_1.postsList[0].content);
-        expect(response.body.sender).toBe(utils_1.postsList[0].sender);
+        expect(response.body).toHaveProperty("sender");
+        expect(response.body.sender.toString()).toBe(user._id.toString());
     }));
     test("Get Comments by Post ID", () => __awaiter(void 0, void 0, void 0, function* () {
-        for (const comment of commentsList) {
-            const res = yield (0, supertest_1.default)(app).post("/comments").set("Authorization", "Bearer " + user.token).send(Object.assign(Object.assign({}, comment), { postId }));
+        for (const comment of utils_1.commentsList.slice(0, 2)) {
+            const res = yield (0, supertest_1.default)(app)
+                .post("/comments")
+                .set("Authorization", "Bearer " + user.token)
+                .send({ content: comment.content, postId });
             expect(res.status).toBe(201);
             expect(res.body.content).toBe(comment.content);
-            expect(res.body.postId).toBe(postId);
+            expect(res.body.postId.toString()).toBe(postId.toString());
+            expect(res.body.sender.toString()).toBe(user._id.toString());
         }
         const response = yield (0, supertest_1.default)(app).get("/post/" + postId + "/comments");
         expect(response.status).toBe(200);
         expect(response.body.length).toBe(2);
-        expect(response.body[0].postId).toBe(postId);
+        expect(response.body[0].postId.toString()).toBe(postId.toString());
     }));
     test("Delete Post", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).delete("/post/" + postId).set("Authorization", "Bearer " + user.token);

@@ -2,18 +2,19 @@
 import { Request, Response } from 'express';
 import postModel from "../model/postModel";
 import commentModel from '../model/commentModel';
+import mongoose from 'mongoose';
 
 
 const getAllPosts = async (req: Request, res:Response) => {
     try {
         const sender = req.query.sender as string | undefined;
-        if (sender) {
-            const posts = await postModel.find({ sender: sender });
-            return res.json(posts);
-        }else {
-            const posts = await postModel.find();
-            res.json(posts);
-        }
+        if (sender && mongoose.Types.ObjectId.isValid(sender)) {
+      const posts = await postModel.find({ sender });
+      return res.status(200).json(posts);
+    }
+
+    const posts = await postModel.find();
+    res.status(200).json(posts);
     } catch (err: any) {
         res.status(500).json({ message: err.message });
     }
@@ -34,19 +35,33 @@ const getPostById = async (req: Request, res: Response) => {
 }; 
 
 const createNewPost = async (req: Request, res: Response) => {
-    const post = req.body;
-    console.log(post);
-    try {
-        const newPost = await postModel.create(post);
-        res.status(201).json(newPost);
+  try {
+    const userId = (req as any).user?._id;
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const { title, content } = req.body;
+    if (!title || !content) {
+      return res.status(400).json({ message: "Title and content are required" });
+    }
+
+    const newPost = await postModel.create({
+      title,
+      content,
+      sender: userId,
+    });
+
+    res.status(201).json(newPost);
     } catch (err: any) {
-        res.status(500).send('Error creating post');
+        res.status(500).send("Error creating post");
     }
 };
 
 const updatePost = async (req: Request, res: Response) => {
     const id = req.params.id;
-    const updatedData = req.body;   
+    const updatedData = { ...req.body };
+    delete updatedData.sender;  
     try {
         const updatedPost = await postModel.findByIdAndUpdate(id, updatedData, { new: true });
         if (!updatedPost) {

@@ -1,41 +1,78 @@
 //request.rest
 
+// AUTH
+###
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "username": "newuser1",
+  "email": "newuser1@example.com",
+  "password": "newuserpassword"
+}
+
+###
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "newuser1@example.com",
+  "password": "newuserpassword"
+}
+
+###
+POST http://localhost:3000/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTc1MDA1OGJkNjM0ZThmNDI5NjIzNWIiLCJyYW5kIjo5MjgsImlhdCI6MTc2OTI3NTUzMiwiZXhwIjoxNzY5MzYxOTMyfQ.eJsIGrkRquPlKeqxZCjrt1OaDYQDtJc-sOAyEMRQyvM"
+}
+
+###
+POST http://localhost:3000/auth/logout
+Content-Type: application/json
+
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTc1MDA1OGJkNjM0ZThmNDI5NjIzNWIiLCJyYW5kIjo5NTIsImlhdCI6MTc2OTI3NTY1MiwiZXhwIjoxNzY5MzYyMDUyfQ.9_LtnR02yhSHdXcsBLMX9BasF4VOA1k7TM1idbZw43M"
+}
+
 //POSTS
 ###
 
 GET http://localhost:3000/post
 
 ###
-GET http://localhost:3000/post/696b962900d9f5276526f49c
+GET http://localhost:3000/post/696b96b700d9f5276526f4b5
 
 ###
 POST http://localhost:3000/post
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTc1MDA1OGJkNjM0ZThmNDI5NjIzNWIiLCJpYXQiOjE3NjkyNzYwMDEsImV4cCI6MTc2OTI3OTYwMX0.nOyzzygzaKN1wp255lrbAWfOMD_0wLWtcvofPp-CpyY
 Content-Type: application/json
 
 {
   "title": "New Post Title",
-  "content": "This is the content of the new post.",
-  "sender": 333333333
+  "content": "This is the content of the new post."
 }
 
 ###
-GET http://localhost:3000/post?sender=333333333
+GET http://localhost:3000/post?sender=69750058bd634e8f4296235b
 
 ###
-PUT http://localhost:3000/post/696b965500d9f5276526f4a4
+PUT http://localhost:3000/post/697502f8bd634e8f42962383
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTc1MDA1OGJkNjM0ZThmNDI5NjIzNWIiLCJpYXQiOjE3NjkyNzYwMDEsImV4cCI6MTc2OTI3OTYwMX0.nOyzzygzaKN1wp255lrbAWfOMD_0wLWtcvofPp-CpyY
 Content-Type: application/json
 
 {
-  "title": "Updated Post Title",
-  "content": "This is the updated content of the post.",
-  "sender": 333
+  "title": "Updated Post Title1",
+  "content": "This is the updated content of the post1."
 }
 
 ###
-GET http://localhost:3000/post/696b965500d9f5276526f4a4/comments
+GET http://localhost:3000/post/696b96b700d9f5276526f4b5/comments
 
 ###
-DELETE http://localhost:3000/post/696b962900d9f5276526f49c
+DELETE http://localhost:3000/post/697366e7861a0f7f045d7bb2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTc1MDA1OGJkNjM0ZThmNDI5NjIzNWIiLCJpYXQiOjE3NjkyNzYwMDEsImV4cCI6MTc2OTI3OTYwMX0.nOyzzygzaKN1wp255lrbAWfOMD_0wLWtcvofPp-CpyY
 
 //COMMENTS 
 
@@ -43,26 +80,28 @@ DELETE http://localhost:3000/post/696b962900d9f5276526f49c
 GET http://localhost:3000/comments
 
 ###
-GET http://localhost:3000/comments?postId=69500388b6ed5272b29c4732
+GET http://localhost:3000/comments?postId=696b96b700d9f5276526f4b5
 
 ###
-GET http://localhost:3000/comments/695004b9b6ed5272b29c4748
+GET http://localhost:3000/comments/696b967d00d9f5276526f4b2
 
 ###
 POST http://localhost:3000/comments
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTc1MDA1OGJkNjM0ZThmNDI5NjIzNWIiLCJpYXQiOjE3NjkyNzYwMDEsImV4cCI6MTc2OTI3OTYwMX0.nOyzzygzaKN1wp255lrbAWfOMD_0wLWtcvofPp-CpyY
 Content-Type: application/json
 
 {
-  "postId": "69500387b6ed5272b29c4730",
-  "content": "This is a comment 1 on the post.",
-  "sender": 222
+  "postId": "696b96b700d9f5276526f4b5",
+  "content": "This is a comment 1 on the post."
 }
 
 ###
-DELETE http://localhost:3000/comments/696b967600d9f5276526f4ad
+DELETE http://localhost:3000/comments/696b967d00d9f5276526f4b2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTc1MDA1OGJkNjM0ZThmNDI5NjIzNWIiLCJpYXQiOjE3NjkyNzYwMDEsImV4cCI6MTc2OTI3OTYwMX0.nOyzzygzaKN1wp255lrbAWfOMD_0wLWtcvofPp-CpyY
 
 ###
-PUT http://localhost:3000/comments/695004e8b6ed5272b29c474f
+PUT http://localhost:3000/comments/697200b34e06503f1aa0f8fc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTc1MDA1OGJkNjM0ZThmNDI5NjIzNWIiLCJpYXQiOjE3NjkyNzYwMDEsImV4cCI6MTc2OTI3OTYwMX0.nOyzzygzaKN1wp255lrbAWfOMD_0wLWtcvofPp-CpyY
 Content-Type: application/json
 
 {
@@ -73,12 +112,14 @@ Content-Type: application/json
 
 ###
 GET http://localhost:3000/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTc1MDA1OGJkNjM0ZThmNDI5NjIzNWIiLCJpYXQiOjE3NjkyNzYwMDEsImV4cCI6MTc2OTI3OTYwMX0.nOyzzygzaKN1wp255lrbAWfOMD_0wLWtcvofPp-CpyY
 
 ###
-GET http://localhost:3000/users/69738857cc157ada9919ab38
-
+GET http://localhost:3000/users/6973888dcc157ada9919ab40
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTc1MDA1OGJkNjM0ZThmNDI5NjIzNWIiLCJpYXQiOjE3NjkyNzYwMDEsImV4cCI6MTc2OTI3OTYwMX0.nOyzzygzaKN1wp255lrbAWfOMD_0wLWtcvofPp-CpyY
 ###
 POST http://localhost:3000/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTc1MDA1OGJkNjM0ZThmNDI5NjIzNWIiLCJpYXQiOjE3NjkyNzYwMDEsImV4cCI6MTc2OTI3OTYwMX0.nOyzzygzaKN1wp255lrbAWfOMD_0wLWtcvofPp-CpyY
 Content-Type: application/json
 
 {
@@ -88,13 +129,15 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/users?username=newuser
+GET http://localhost:3000/users?username=newuser1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTc1MDA1OGJkNjM0ZThmNDI5NjIzNWIiLCJpYXQiOjE3NjkyNzYwMDEsImV4cCI6MTc2OTI3OTYwMX0.nOyzzygzaKN1wp255lrbAWfOMD_0wLWtcvofPp-CpyY
 
 ###
 GET http://localhost:3000/users?email=newuser2@example.com
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTc1MDA1OGJkNjM0ZThmNDI5NjIzNWIiLCJpYXQiOjE3NjkyNzYwMDEsImV4cCI6MTc2OTI3OTYwMX0.nOyzzygzaKN1wp255lrbAWfOMD_0wLWtcvofPp-CpyY
 ###
-PUT http://localhost:3000/users/64f2c8f4c9ea4b6f8b5d6e1a
+PUT http://localhost:3000/users/69738857cc157ada9919ab38
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTc1MDA1OGJkNjM0ZThmNDI5NjIzNWIiLCJpYXQiOjE3NjkyNzYwMDEsImV4cCI6MTc2OTI3OTYwMX0.nOyzzygzaKN1wp255lrbAWfOMD_0wLWtcvofPp-CpyY
 Content-Type: application/json
 
 {
@@ -104,4 +147,5 @@ Content-Type: application/json
 } 
 
 ###
-DELETE http://localhost:3000/users/697388cccc157ada9919ab48
+DELETE http://localhost:3000/users/69738857cc157ada9919ab38
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTc1MDA1OGJkNjM0ZThmNDI5NjIzNWIiLCJpYXQiOjE3NjkyNzYwMDEsImV4cCI6MTc2OTI3OTYwMX0.nOyzzygzaKN1wp255lrbAWfOMD_0wLWtcvofPp-CpyY

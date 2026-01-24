@@ -3,7 +3,7 @@ import initApp from "../index";
 import postModel from "../model/postModel";
 import commentModel from "../model/commentModel";
 import { Express } from "express";
-import { postsList, getLogedInUser, UserData } from "./utils";
+import { postsList, commentsList, getLogedInUser, UserData } from "./utils";
 
 let app: Express;
 let postId = "";
@@ -20,13 +20,14 @@ afterAll((done) => {
     done();
 });
 
-
-type CommentData = { content: string; postId: string; sender: number; _id?: string };
+/*
+type CommentData = { content: string };
 
 const commentsList: Omit<CommentData, "postId">[] = [
-  { content: "comment 1", sender: 111 },
-  { content: "comment 2", sender: 222 },
+  { content: "comment 1" },
+  { content: "comment 2" },
 ];
+*/
 
 describe("Posts Test Suite", () => {
     test("Initial empty posts", async () => {
@@ -41,7 +42,8 @@ describe("Posts Test Suite", () => {
             expect(response.status).toBe(201);
             expect(response.body.title).toBe(post.title);
             expect(response.body.content).toBe(post.content);
-            expect(response.body.sender).toBe(post.sender);
+            expect(response.body).toHaveProperty("sender");
+            expect(response.body.sender.toString()).toBe(user._id.toString());
         }
     });
 
@@ -52,10 +54,12 @@ describe("Posts Test Suite", () => {
     });
 
     test("Get Posts by Sender", async () => {
-        const response = await request(app).get("/post?sender=" + postsList[0].sender);
+        const response = await request(app).get("/post?sender=" + user._id);
+
         expect(response.status).toBe(200);
         expect(response.body.length).toBeGreaterThanOrEqual(1);
         expect(response.body[0].title).toBe(postsList[0].title);
+
         postId = response.body[0]._id;
         expect(postId).toBeDefined();
     });
@@ -66,33 +70,40 @@ describe("Posts Test Suite", () => {
         expect(response.body._id).toBe(postId);
         expect(response.body.title).toBe(postsList[0].title);
         expect(response.body.content).toBe(postsList[0].content);
-        expect(response.body.sender).toBe(postsList[0].sender);
+        expect(response.body).toHaveProperty("sender");
+        expect(response.body.sender.toString()).toBe(user._id.toString());
     });
 
     test("Update Post", async () => {
         postsList[0].title = "updated title";
         postsList[0].content = "updated content";
-        postsList[0].sender = 333;
 
         const response = await (await request(app).put("/post/" + postId).set("Authorization", "Bearer " + user.token).send(postsList[0]));
         expect(response.status).toBe(200);
         expect(response.body._id).toBe(postId);
         expect(response.body.title).toBe(postsList[0].title);
         expect(response.body.content).toBe(postsList[0].content);
-        expect(response.body.sender).toBe(postsList[0].sender);
+        expect(response.body).toHaveProperty("sender");
+        expect(response.body.sender.toString()).toBe(user._id.toString());
     });
 
     test("Get Comments by Post ID", async () => {
-        for (const comment of commentsList) {
-            const res = await request(app).post("/comments").set("Authorization", "Bearer " + user.token).send({ ...comment, postId });
+        for (const comment of commentsList.slice(0, 2)) {
+            const res = await request(app)
+            .post("/comments")
+            .set("Authorization", "Bearer " + user.token)
+            .send({ content: comment.content, postId });
+
             expect(res.status).toBe(201);
             expect(res.body.content).toBe(comment.content);
-            expect(res.body.postId).toBe(postId);
+            expect(res.body.postId.toString()).toBe(postId.toString());
+            expect(res.body.sender.toString()).toBe(user._id.toString());
         }
+
         const response = await request(app).get("/post/" + postId + "/comments");
         expect(response.status).toBe(200);
         expect(response.body.length).toBe(2);
-        expect(response.body[0].postId).toBe(postId);
+        expect(response.body[0].postId.toString()).toBe(postId.toString());
     });
 
     test("Delete Post", async () => {
