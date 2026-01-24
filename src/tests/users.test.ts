@@ -1,54 +1,64 @@
 import request from "supertest";
 import initApp from "../index";
 import userModel from "../model/userModel";
-import e, { Express } from "express";
+import { Express } from "express";
+import { usersList, UserData, getLogedInUser } from "./utils";
 
 let app: Express;
 let userId = "";
+let user: UserData;
 
 beforeAll(async () => {
   app = await initApp();
   await userModel.deleteMany({});
+  user = await getLogedInUser(app);
 });
 
 afterAll((done) => {
    done();
 });
 
-type UserData = { username: string; email: string; password: string; _id?: string };
-
-const usersList: UserData[] = [
-    { username: "user1", email: "user1@test.com", password: "123456" },
-  { username: "user2", email: "user2@test.com", password: "123456" },
-  { username: "user3", email: "user3@test.com", password: "123456" },
-];
-
 describe("Users Test Suite", () => {
     test("Initial empty users", async () => {
-        const response = await request(app).get("/users");
+        const response = await request(app).get("/users").set("Authorization", "Bearer " + user.token);
         expect(response.status).toBe(200);
-        expect(response.body).toEqual([]);
+        expect(response.body.length).toBe(1); // because getLogedInUser creates one user
     });
 
+    /*
     test("Create users", async () => {
-        for (const user of usersList) {
+        for (const newUser of usersList) {
             const response = await request(app)
                 .post("/users")
-                .send(user);
+                .set("Authorization", "Bearer " + user.token)
+                .send(newUser);
             expect(response.status).toBe(201);
-            expect(response.body.username).toBe(user.username);
-            expect(response.body.email).toBe(user.email);
+            expect(response.body.username).toBe(newUser.username);
+            expect(response.body.email).toBe(newUser.email);
         }
+    });
+    */
+    test("Register users", async () => {
+    for (const newUser of usersList) {
+        const response = await request(app)
+        .post("/auth/register")
+        .send(newUser);
+
+        expect(response.status).toBe(201);
+        expect(response.body).toHaveProperty("_id");
+        expect(response.body).toHaveProperty("token");
+        expect(response.body).toHaveProperty("refreshToken");
+    }
     });
 
     test("Get All Users", async () => {
-        const response = await request(app).get("/users");
+        const response = await request(app).get("/users").set("Authorization", "Bearer " + user.token);
         expect(response.status).toBe(200);
-        expect(response.body.length).toBe(usersList.length);
+        expect(response.body.length).toBe(usersList.length + 1); // +1 for the logged in user
     });
 
     test("Get User by username", async () => {
-        const response = await request(app).get("/users?username=" + usersList[0].username);
+        const response = await request(app).get("/users?username=" + usersList[0].username).set("Authorization", "Bearer " + user.token);
         expect(response.status).toBe(200);
         expect(response.body.length).toBeGreaterThanOrEqual(1);
         expect(response.body[0].username).toBe(usersList[0].username);
@@ -57,14 +67,14 @@ describe("Users Test Suite", () => {
     });
 
     test("Get User by email", async () => {
-        const response = await request(app).get("/users?email=" + usersList[1].email);
+        const response = await request(app).get("/users?email=" + usersList[1].email).set("Authorization", "Bearer " + user.token);
         expect(response.status).toBe(200);
         expect(response.body.length).toBeGreaterThanOrEqual(1);
         expect(response.body[0].email).toBe(usersList[1].email);
     });
 
     test("Get User by ID", async () => {
-        const response = await request(app).get("/users/" + userId);
+        const response = await request(app).get("/users/" + userId).set("Authorization", "Bearer " + user.token);
         expect(response.status).toBe(200);
         expect(response.body._id).toBe(userId);
         expect(response.body.username).toBe(usersList[0].username);
@@ -76,6 +86,7 @@ describe("Users Test Suite", () => {
         usersList[0].email = "updatedUser1@test.com";
         const response = await request(app)
             .put("/users/" + userId)
+            .set("Authorization", "Bearer " + user.token)
             .send(usersList[0]);
         expect(response.status).toBe(200);
         expect(response.body._id).toBe(userId);
@@ -84,13 +95,13 @@ describe("Users Test Suite", () => {
     });
 
     test("Delete User", async () => {
-        const response = await request(app).delete("/users/" + userId);
+        const response = (await request(app).delete("/users/" + userId).set("Authorization", "Bearer " + user.token));
         expect(response.status).toBe(200);
         expect(response.body._id).toBe(userId);
     });
 
     test("Get Deleted User by ID", async () => {
-        const response = await request(app).get("/users/" + userId);
+        const response = await request(app).get("/users/" + userId).set("Authorization", "Bearer " + user.token);
         expect(response.status).toBe(404);
     });
 

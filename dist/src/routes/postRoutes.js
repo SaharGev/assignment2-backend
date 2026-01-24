@@ -6,12 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 //routes/postRoutes.ts
 const express_1 = require("express");
 const postControllers_1 = __importDefault(require("../controllers/postControllers"));
+const authMiddleware_1 = require("../middleware/authMiddleware");
 const router = (0, express_1.Router)();
 router.get('/', postControllers_1.default.getAllPosts);
 router.get('/:id', postControllers_1.default.getPostById);
-router.post('/', postControllers_1.default.createNewPost);
-router.put('/:id', postControllers_1.default.updatePost);
-router.delete('/:id', postControllers_1.default.deletePost);
+router.post('/', authMiddleware_1.authenticate, postControllers_1.default.createNewPost);
+router.put('/:id', authMiddleware_1.authenticate, postControllers_1.default.updatePost);
+router.delete('/:id', authMiddleware_1.authenticate, postControllers_1.default.deletePost);
 router.get('/:postId/comments', postControllers_1.default.getCommentsByPostId);
 exports.default = router;
 //# sourceMappingURL=postRoutes.js.map

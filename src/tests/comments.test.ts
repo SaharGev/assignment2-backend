@@ -3,33 +3,28 @@ import request from "supertest";
 import initApp from "../index";
 import commentModel from "../model/commentModel";
 import { Express } from "express";
+import { commentsList, CommentData, getLogedInUser, UserData } from "./utils";
 
 let app: Express;
 let commentId = "";
+let user: UserData
 
 beforeAll(async () => {
   app = await initApp();
   await commentModel.deleteMany();
+  user = await getLogedInUser(app);
 });
 
 afterAll((done) => {
   done();
 });
 
-type CommentData = { content: string, postId: string, sender: number, _id?: string };
-
-const commentsList: CommentData[] = [
-  { content: "this is my comment", postId: "69500387b6ed5272b29c4730", sender: 22222 },
-  { content: "this is my second comment", postId: "69500387b6ed5272b29c4730", sender: 11111 },
-  { content: "this is my third comment", postId: "69500387b6ed5272b29c4730", sender: 33333 },
-  { content: "this is my fourth comment", postId: "69500387b6ed5272b29c4730", sender: 33333 },
-];
 
 describe("Sample Test Suite", () => {
 
   test("Create Comment", async () => {
     for (const comment of commentsList) {
-      const response = await request(app).post("/comments").send(comment);
+      const response = await request(app).post("/comments").set("Authorization", "Bearer " + user.token).send(comment);
       expect(response.status).toBe(201);
       expect(response.body.content).toBe(comment.content);
       expect(response.body.postId).toBe(comment.postId);
@@ -65,6 +60,7 @@ describe("Sample Test Suite", () => {
     commentsList[0].postId = "69500387b6ed5272b29c4730";
     const response = await request(app)
       .put("/comments/" + commentId)
+      .set("Authorization", "Bearer " + user.token)
       .send(commentsList[0]);
     expect(response.status).toBe(200);
     expect(response.body.content).toBe(commentsList[0].content);
@@ -73,7 +69,7 @@ describe("Sample Test Suite", () => {
   });
 
   test("Delete Comment", async () => {
-    const response = await request(app).delete("/comments/" + commentId);
+    const response = (await request(app).delete("/comments/" + commentId).set("Authorization", "Bearer " + user.token));
     expect(response.status).toBe(200);
     expect(response.body._id).toBe(commentId);
 

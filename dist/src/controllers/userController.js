@@ -47,16 +47,17 @@ const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(500).send('Error retrieving user');
     }
 });
-const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+/*
+const createUser = async (req: Request, res: Response) => {
     const user = req.body;
     try {
-        const newUser = yield userModel_1.default.create(user);
+        const newUser = await userModel.create(user);
         res.status(201).json(newUser);
-    }
-    catch (err) {
+    } catch (err: any) {
         res.status(500).json({ message: err.message });
     }
-});
+};
+*/
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     const updatedData = req.body;
@@ -87,7 +88,7 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.default = {
     getAllUsers,
     getUserById,
-    createUser,
+    //createUser,
     updateUser,
     deleteUser,
 };

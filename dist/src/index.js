@@ -11,7 +11,8 @@ const commentsRoute_1 = __importDefault(require("./routes/commentsRoute"));
 const usersRoute_1 = __importDefault(require("./routes/usersRoute"));
 const authRoute_1 = __importDefault(require("./routes/authRoute"));
 const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config({ path: '.env.dev' });
+const envFile = process.env.NODE_ENV === "test" ? ".env.test" : ".env.dev";
+dotenv_1.default.config({ path: envFile });
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 // API routes

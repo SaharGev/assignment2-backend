@@ -1,18 +1,15 @@
 import request from "supertest";
 import initApp from "../index";
-//import moviesModel from "../model/moviesModel";
 import { Express } from "express";
 import User from "../model/userModel";
-//import { getLogedInUser, UserData, MovieData, moviesList } from "./utils"
+import { UserData, PostData } from "./utils"; 
 
 let app: Express;
-//let loginUser: UserData;
-let movieId = "";
+
 
 beforeAll(async () => {
   app = await initApp();
   await User.deleteMany();
-  //oginUser = await getLogedInUser(app);
 });
 
 afterAll((done) => {

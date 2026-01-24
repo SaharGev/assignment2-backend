@@ -6,7 +6,8 @@ import commentsRoute from './routes/commentsRoute';
 import userRoute from './routes/usersRoute';
 import authRoute from './routes/authRoute';
 import dotenv from 'dotenv';
-dotenv.config({ path: '.env.dev' });
+const envFile = process.env.NODE_ENV === "test" ? ".env.test" : ".env.dev";
+dotenv.config({ path: envFile });
 
 
 const app = express();

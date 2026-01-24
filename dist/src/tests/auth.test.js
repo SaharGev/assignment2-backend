@@ -15,14 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const index_1 = __importDefault(require("../index"));
 const userModel_1 = __importDefault(require("../model/userModel"));
-//import { getLogedInUser, UserData, MovieData, moviesList } from "./utils"
 let app;
-//let loginUser: UserData;
-let movieId = "";
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, index_1.default)();
     yield userModel_1.default.deleteMany();
-    //oginUser = await getLogedInUser(app);
 }));
 afterAll((done) => {
     done();

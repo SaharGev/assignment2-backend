@@ -34,6 +34,7 @@ const getUserById = async (req: Request, res: Response) => {
     }
 };
 
+/*
 const createUser = async (req: Request, res: Response) => {
     const user = req.body;
     try {
@@ -43,6 +44,7 @@ const createUser = async (req: Request, res: Response) => {
         res.status(500).json({ message: err.message });
     }
 };
+*/ 
 
 const updateUser = async (req: Request, res: Response) => {
     const id = req.params.id;
@@ -74,7 +76,7 @@ const deleteUser = async (req: Request, res: Response) => {
 export default {
   getAllUsers,
   getUserById,
-  createUser,
+  //createUser,
   updateUser,
   deleteUser,
 };
