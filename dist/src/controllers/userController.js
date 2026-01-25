@@ -19,16 +19,16 @@ const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const username = req.query.username;
         const email = req.query.email;
         if (username) {
-            const users = yield userModel_1.default.find({ username: username });
+            const users = yield userModel_1.default.find({ username: username }).select("-password -refreshTokens");
             return res.status(200).json(users);
         }
         else if (email) {
-            const users = yield userModel_1.default.find({ email: email });
+            const users = yield userModel_1.default.find({ email: email }).select("-password -refreshTokens");
             return res.status(200).json(users);
         }
         else {
-            const users = yield userModel_1.default.find();
-            res.status(200).json(users);
+            const users = yield userModel_1.default.find().select("-password -refreshTokens");
+            return res.status(200).json(users);
         }
     }
     catch (err) {
@@ -38,7 +38,7 @@ const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     try {
-        const user = yield userModel_1.default.findById(id);
+        const user = yield userModel_1.default.findById(id).select("-password -refreshTokens");
         if (!user) {
             return res.status(404).send('User not found');
         }
@@ -62,7 +62,12 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             password: hashedPassword,
             refreshTokens: [],
         });
-        return res.status(201).json(newUser);
+        return res.status(201).json({
+            _id: newUser._id,
+            username: newUser.username,
+            email: newUser.email,
+            createdAt: newUser.createdAt,
+        });
     }
     catch (err) {
         return res.status(500).json({ message: err.message });
@@ -71,12 +76,13 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     const updatedData = Object.assign({}, req.body);
+    delete updatedData.refreshTokens;
     try {
         if (updatedData.password) {
             const salt = yield bcrypt_1.default.genSalt(10);
             updatedData.password = yield bcrypt_1.default.hash(updatedData.password, salt);
         }
-        const updatedUser = yield userModel_1.default.findByIdAndUpdate(id, updatedData, { new: true });
+        const updatedUser = yield userModel_1.default.findByIdAndUpdate(id, updatedData, { new: true }).select("-password -refreshTokens");
         if (!updatedUser) {
             return res.status(404).send("User not found");
         }
@@ -93,7 +99,11 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         if (!deletedUser) {
             return res.status(404).send('User not found');
         }
-        res.status(200).json(deletedUser);
+        res.status(200).json({
+            _id: deletedUser._id,
+            username: deletedUser.username,
+            email: deletedUser.email,
+        });
     }
     catch (err) {
         res.status(500).send('Error deleting user');

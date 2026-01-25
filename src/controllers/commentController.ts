@@ -36,10 +36,24 @@ const getCommentById = async (req: Request, res: Response) => {
 
 // Create a new comment
 const createComment = async (req: Request, res: Response) => {
-    const comment = req.body;
-    try {
-        const newComment = await commentModel.create(comment);
-        res.status(201).json(newComment);
+  try {
+    const userId = (req as any).user?._id;
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const { postId, content } = req.body;
+    if (!postId || !content) {
+      return res.status(400).json({ message: "postId and content are required" });
+    }
+
+    const newComment = await commentModel.create({
+      postId,
+      content,
+      sender: userId,
+    });
+
+    res.status(201).json(newComment);
     } catch (err: any) {
         res.status(500).json({ message: err.message });
     }
@@ -61,7 +75,9 @@ const deleteComment = async (req: Request, res: Response) => {
 //Update a comment
 const updateComment = async (req: Request, res: Response) => {
     const id = req.params.id;
-    const updatedData = req.body;
+    const updatedData = { ...req.body };
+    delete updatedData.sender;
+    delete updatedData.postId;
     try {
         const updatedComment = await commentModel.findByIdAndUpdate(id, updatedData, { new: true });
         if (!updatedComment) {

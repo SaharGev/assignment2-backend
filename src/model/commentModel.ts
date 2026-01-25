@@ -12,7 +12,8 @@ const commentSchema = new mongoose.Schema({
         required: true
     },
     sender: {
-        type: Number,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user",
         required: true
     },
     createdAt: {

@@ -9,10 +9,10 @@ const postControllers_1 = __importDefault(require("../controllers/postController
 const authMiddleware_1 = require("../middleware/authMiddleware");
 const router = (0, express_1.Router)();
 router.get('/', postControllers_1.default.getAllPosts);
+router.get('/:postId/comments', postControllers_1.default.getCommentsByPostId);
 router.get('/:id', postControllers_1.default.getPostById);
 router.post('/', authMiddleware_1.authenticate, postControllers_1.default.createNewPost);
 router.put('/:id', authMiddleware_1.authenticate, postControllers_1.default.updatePost);
 router.delete('/:id', authMiddleware_1.authenticate, postControllers_1.default.deletePost);
-router.get('/:postId/comments', postControllers_1.default.getCommentsByPostId);
 exports.default = router;
 //# sourceMappingURL=postRoutes.js.map

@@ -35,6 +35,9 @@ describe("Users Test Suite", () => {
             expect(response.status).toBe(201);
             expect(response.body.username).toBe(newUser.username);
             expect(response.body.email).toBe(newUser.email);
+
+            expect(response.body).not.toHaveProperty("password");
+            expect(response.body).not.toHaveProperty("refreshTokens");
         }
     });
 
@@ -42,6 +45,9 @@ describe("Users Test Suite", () => {
         const response = await request(app).get("/users").set("Authorization", "Bearer " + user.token);
         expect(response.status).toBe(200);
         expect(response.body.length).toBe(usersList.length + 1); // +1 for the logged in user
+
+        expect(response.body).not.toHaveProperty("password");
+        expect(response.body).not.toHaveProperty("refreshTokens");
     });
 
     test("Get User by username", async () => {
@@ -84,7 +90,12 @@ describe("Users Test Suite", () => {
         expect(response.body.username).toBe(usersList[0].username);
         expect(response.body.email).toBe(usersList[0].email);
 
-        expect(response.body.password).not.toBe(newPassword);
+        expect(response.body).not.toHaveProperty("password");
+        expect(response.body).not.toHaveProperty("refreshTokens");
+
+        const updatedInDb = await userModel.findById(userId);
+        expect(updatedInDb).toBeTruthy();
+        expect(updatedInDb!.password).not.toBe(newPassword);
     });
 
     test("Delete User", async () => {

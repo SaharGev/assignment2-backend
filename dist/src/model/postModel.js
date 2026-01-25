@@ -15,7 +15,8 @@ const postSchema = new mongoose_1.default.Schema({
         required: true
     },
     sender: {
-        type: Number,
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: "user",
         required: true
     },
     createdAt: {

@@ -14,17 +14,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const postModel_1 = __importDefault(require("../model/postModel"));
 const commentModel_1 = __importDefault(require("../model/commentModel"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const getAllPosts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const sender = req.query.sender;
-        if (sender) {
-            const posts = yield postModel_1.default.find({ sender: sender });
-            return res.json(posts);
+        if (sender && mongoose_1.default.Types.ObjectId.isValid(sender)) {
+            const posts = yield postModel_1.default.find({ sender });
+            return res.status(200).json(posts);
         }
-        else {
-            const posts = yield postModel_1.default.find();
-            res.json(posts);
-        }
+        const posts = yield postModel_1.default.find();
+        res.status(200).json(posts);
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -45,19 +44,31 @@ const getPostById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 const createNewPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const post = req.body;
-    console.log(post);
+    var _a;
     try {
-        const newPost = yield postModel_1.default.create(post);
+        const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a._id;
+        if (!userId) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+        const { title, content } = req.body;
+        if (!title || !content) {
+            return res.status(400).json({ message: "Title and content are required" });
+        }
+        const newPost = yield postModel_1.default.create({
+            title,
+            content,
+            sender: userId,
+        });
         res.status(201).json(newPost);
     }
     catch (err) {
-        res.status(500).send('Error creating post');
+        res.status(500).send("Error creating post");
     }
 });
 const updatePost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
-    const updatedData = req.body;
+    const updatedData = Object.assign({}, req.body);
+    delete updatedData.sender;
     try {
         const updatedPost = yield postModel_1.default.findByIdAndUpdate(id, updatedData, { new: true });
         if (!updatedPost) {
