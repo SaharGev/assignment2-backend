@@ -8,6 +8,7 @@ const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const postRoutes_1 = __importDefault(require("./routes/postRoutes"));
 const commentsRoute_1 = __importDefault(require("./routes/commentsRoute"));
+const usersRoute_1 = __importDefault(require("./routes/usersRoute"));
 const authRoute_1 = __importDefault(require("./routes/authRoute"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config({ path: '.env.dev' });
@@ -16,6 +17,7 @@ app.use(express_1.default.json());
 // API routes
 app.use("/post", postRoutes_1.default);
 app.use("/comments", commentsRoute_1.default);
+app.use("/users", usersRoute_1.default);
 app.use("/auth", authRoute_1.default);
 const initApp = () => {
     const pr = new Promise((resolve, reject) => {
