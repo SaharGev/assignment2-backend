@@ -9,5 +9,7 @@ const authController_1 = __importDefault(require("../controllers/authController"
 const router = express_1.default.Router();
 router.post("/register", authController_1.default.register);
 router.post("/login", authController_1.default.login);
+router.post("/refresh", authController_1.default.refreshToken);
+router.post("/logout", authController_1.default.logout);
 exports.default = router;
 //# sourceMappingURL=authRoute.js.map

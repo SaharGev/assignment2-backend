@@ -2,28 +2,24 @@ import request from "supertest";
 import initApp from "../index";
 import postModel from "../model/postModel";
 import commentModel from "../model/commentModel";
-import e, { Express } from "express";
+import { Express } from "express";
+import { postsList, getLogedInUser, UserData } from "./utils";
 
 let app: Express;
 let postId = "";
+let user: UserData;
 
 beforeAll(async () => {
   app = await initApp();
   await postModel.deleteMany();
   await commentModel.deleteMany();
+  user = await getLogedInUser(app);
 });
 
 afterAll((done) => {
     done();
 });
 
-type PostData = { title: string, content: string, sender: number, _id?: string };
-
-const postsList: PostData[] = [
-    { title: "post 1", content: "content 1", sender: 111 },
-    { title: "post 2", content: "content 2", sender: 222 },
-    { title: "post 3", content: "content 3", sender: 111 },
-];
 
 type CommentData = { content: string; postId: string; sender: number; _id?: string };
 
@@ -41,7 +37,7 @@ describe("Posts Test Suite", () => {
 
     test("Create Post", async () => {
         for (const post of postsList) {
-            const response = await request(app).post("/post").send(post);
+            const response = await request(app).post("/post").set("Authorization", "Bearer " + user.token).send(post);
             expect(response.status).toBe(201);
             expect(response.body.title).toBe(post.title);
             expect(response.body.content).toBe(post.content);
@@ -78,7 +74,7 @@ describe("Posts Test Suite", () => {
         postsList[0].content = "updated content";
         postsList[0].sender = 333;
 
-        const response = await request(app).put("/post/" + postId).send(postsList[0]);
+        const response = await (await request(app).put("/post/" + postId).set("Authorization", "Bearer " + user.token).send(postsList[0]));
         expect(response.status).toBe(200);
         expect(response.body._id).toBe(postId);
         expect(response.body.title).toBe(postsList[0].title);
@@ -88,7 +84,7 @@ describe("Posts Test Suite", () => {
 
     test("Get Comments by Post ID", async () => {
         for (const comment of commentsList) {
-            const res = await request(app).post("/comments").send({ ...comment, postId });
+            const res = await request(app).post("/comments").set("Authorization", "Bearer " + user.token).send({ ...comment, postId });
             expect(res.status).toBe(201);
             expect(res.body.content).toBe(comment.content);
             expect(res.body.postId).toBe(postId);
@@ -100,7 +96,7 @@ describe("Posts Test Suite", () => {
     });
 
     test("Delete Post", async () => {
-        const response = await request(app).delete("/post/" + postId);
+        const response = await request(app).delete("/post/" + postId).set("Authorization", "Bearer " + user.token);
         expect(response.status).toBe(200);
         expect(response.body._id).toBe(postId);
     });
