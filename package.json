@@ -10,7 +10,9 @@
     "testComment": "tsc && jest --runInBand --detectOpenHandles --forceExit ./src/tests/comments.test.ts",
     "testPosts": "tsc && jest --runInBand --detectOpenHandles --forceExit ./src/tests/posts.test.ts",
     "testUsers": "tsc && jest --runInBand --detectOpenHandles --forceExit ./src/tests/users.test.ts",
-    "testAuth": "tsc && jest --runInBand --detectOpenHandles --forceExit ./src/tests/auth.test.ts"
+    "testAuth": "tsc && jest --runInBand --detectOpenHandles --forceExit ./src/tests/auth.test.ts",
+    "tsoa:spec": "tsoa spec",
+    "tsoa:routes": "tsoa routes"
   },
   "author": "Sahar & Hadas",
   "license": "ISC",
@@ -18,16 +20,19 @@
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
+    "joi": "^18.0.2",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.19.3",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "tsoa": "^7.0.0-alpha.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^25.0.10",
     "@types/supertest": "^6.0.3",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",

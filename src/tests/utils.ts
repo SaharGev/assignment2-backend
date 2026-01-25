@@ -51,17 +51,6 @@ export const postsList: PostData[] = [
   { title: "post 3", content: "content 3" },
 ];
 
-/*
-export type CommentData = { content: string; postId: string; _id?: string };
-
-export const commentsList: CommentData[] = [
-  { content: "this is my comment", postId: "69500387b6ed5272b29c4730" },
-  { content: "this is my second comment", postId: "69500387b6ed5272b29c4730" },
-  { content: "this is my third comment", postId: "69500387b6ed5272b29c4730" },
-  { content: "this is my fourth comment", postId: "69500387b6ed5272b29c4730" },
-];
-*/
-
 export type CommentCreateData = { content: string };
 
 export const commentsList: CommentCreateData[] = [

@@ -14,4 +14,3 @@ router.get('/:id', authMiddleware_1.authenticate, userController_1.default.getUs
 router.put('/:id', authMiddleware_1.authenticate, userController_1.default.updateUser);
 router.delete('/:id', authMiddleware_1.authenticate, userController_1.default.deleteUser);
 exports.default = router;
-//# sourceMappingURL=usersRoute.js.map

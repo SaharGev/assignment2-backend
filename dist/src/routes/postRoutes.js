@@ -15,4 +15,3 @@ router.post('/', authMiddleware_1.authenticate, postControllers_1.default.create
 router.put('/:id', authMiddleware_1.authenticate, postControllers_1.default.updatePost);
 router.delete('/:id', authMiddleware_1.authenticate, postControllers_1.default.deletePost);
 exports.default = router;
-//# sourceMappingURL=postRoutes.js.map

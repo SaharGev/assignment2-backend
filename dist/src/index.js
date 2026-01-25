@@ -10,11 +10,14 @@ const postRoutes_1 = __importDefault(require("./routes/postRoutes"));
 const commentsRoute_1 = __importDefault(require("./routes/commentsRoute"));
 const usersRoute_1 = __importDefault(require("./routes/usersRoute"));
 const authRoute_1 = __importDefault(require("./routes/authRoute"));
+const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const swagger_json_1 = __importDefault(require("./swagger.json"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const envFile = process.env.NODE_ENV === "test" ? ".env.test" : ".env.dev";
 dotenv_1.default.config({ path: envFile });
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
+app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_json_1.default));
 // API routes
 app.use("/post", postRoutes_1.default);
 app.use("/comments", commentsRoute_1.default);
@@ -39,4 +42,3 @@ const initApp = () => {
     return pr;
 };
 exports.default = initApp;
-//# sourceMappingURL=index.js.map

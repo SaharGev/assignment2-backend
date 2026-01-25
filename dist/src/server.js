@@ -4,10 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = __importDefault(require("./index"));
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 (0, index_1.default)().then((app) => {
     app.listen(port, () => {
         console.log(`Example app listening at http://localhost:${port}`);
     });
 });
-//# sourceMappingURL=server.js.map

@@ -26,4 +26,3 @@ const commentSchema = new mongoose_1.default.Schema({
     }
 });
 exports.default = mongoose_1.default.model('comment', commentSchema);
-//# sourceMappingURL=commentModel.js.map

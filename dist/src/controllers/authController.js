@@ -124,4 +124,3 @@ exports.default = {
     refreshToken,
     logout
 };
-//# sourceMappingURL=authController.js.map

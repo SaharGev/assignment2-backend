@@ -5,13 +5,18 @@ import postsRoute from './routes/postRoutes';
 import commentsRoute from './routes/commentsRoute';
 import userRoute from './routes/usersRoute';
 import authRoute from './routes/authRoute';
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./swagger.json";
 import dotenv from 'dotenv';
+
 const envFile = process.env.NODE_ENV === "test" ? ".env.test" : ".env.dev";
 dotenv.config({ path: envFile });
 
 
 const app = express();
 app.use(express.json());
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // API routes
 app.use("/post", postsRoute);

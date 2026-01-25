@@ -29,14 +29,6 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
 afterAll((done) => {
     done();
 });
-/*
-type CommentData = { content: string };
-
-const commentsList: Omit<CommentData, "postId">[] = [
-  { content: "comment 1" },
-  { content: "comment 2" },
-];
-*/
 describe("Posts Test Suite", () => {
     test("Initial empty posts", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).get("/post");
@@ -112,4 +104,3 @@ describe("Posts Test Suite", () => {
         expect(response.status).toBe(404);
     }));
 });
-//# sourceMappingURL=posts.test.js.map
