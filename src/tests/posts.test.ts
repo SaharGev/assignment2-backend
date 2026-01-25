@@ -20,15 +20,6 @@ afterAll((done) => {
     done();
 });
 
-/*
-type CommentData = { content: string };
-
-const commentsList: Omit<CommentData, "postId">[] = [
-  { content: "comment 1" },
-  { content: "comment 2" },
-];
-*/
-
 describe("Posts Test Suite", () => {
     test("Initial empty posts", async () => {
         const response = await request(app).get("/post");

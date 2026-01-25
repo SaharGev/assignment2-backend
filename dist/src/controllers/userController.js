@@ -116,4 +116,3 @@ exports.default = {
     updateUser,
     deleteUser,
 };
-//# sourceMappingURL=userController.js.map

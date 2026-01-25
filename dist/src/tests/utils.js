@@ -49,4 +49,3 @@ exports.commentsList = [
     { content: "comment 2" },
     { content: "comment 3" },
 ];
-//# sourceMappingURL=utils.js.map

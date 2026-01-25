@@ -101,4 +101,3 @@ describe("Sample Test Suite", () => {
         expect(getResponse.status).toBe(404);
     }));
 });
-//# sourceMappingURL=comments.test.js.map

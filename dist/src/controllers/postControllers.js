@@ -111,4 +111,3 @@ exports.default = {
     getCommentsByPostId,
     deletePost
 };
-//# sourceMappingURL=postControllers.js.map

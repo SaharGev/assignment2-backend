@@ -7,4 +7,3 @@ exports.default = {
     setupFiles: ["./jest.setup.ts"],
     roots: ["<rootDir>/src/tests"],
 };
-//# sourceMappingURL=jest.config.js.map

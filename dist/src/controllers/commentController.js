@@ -106,4 +106,3 @@ exports.default = {
     updateComment,
     getCommentsByPostId
 };
-//# sourceMappingURL=commentController.js.map
