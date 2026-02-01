@@ -1,3 +1,4 @@
+
 {
   "entryFile": "src/server.ts",
   "controllerPathGlobs": ["src/controllers-tsoa/*.ts"],

@@ -15,4 +15,14 @@ export class AuthTsoaController extends Controller {
   public async login(@Body() body: LoginBody): Promise<{ message: string }> {
     return { message: "ok" };
   }
+
+  @Post("logout")
+  public async logout(): Promise<{ message: string }> {
+    return { message: "ok" };
+  } 
+
+  @Post("refresh")
+  public async refresh(): Promise<{ message: string }> {
+    return { message: "ok" };
+  }
 }
